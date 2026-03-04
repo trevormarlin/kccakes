@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KC's Cakes & Bakes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #090c0f;
+      --bg2:       #09100f;
+      --bg3:       #0d1319;
+      --card:      #101820;
+      --amber:     #7ab8d4;
+      --amber-lt:  #a0d0e8;
+      --cream:     #e8f2f8;
+      --muted:     #7a9fb5;
+      --border:    rgba(122,184,212,0.18);
+      --shadow:    rgba(0,0,0,0.6);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 4rem;
+      background: linear-gradient(to bottom, rgba(15,11,9,0.97) 0%, transparent 100%);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.4s, background 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(15,11,9,0.97);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--amber);
+      letter-spacing: 0.03em;
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      opacity: 0.75;
+      transition: opacity 0.2s, color 0.2s;
+    }
+    .nav-links a:hover { opacity: 1; color: var(--amber); }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 30%, rgba(122,184,212,0.09) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 20% 80%, rgba(80,140,180,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 70%, rgba(122,184,212,0.05) 0%, transparent 60%);
+    }
+    .hero-deco {
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 80px,
+          rgba(122,184,212,0.025) 80px,
+          rgba(122,184,212,0.025) 81px
+        );
+    }
+    .hero-content { position: relative; z-index: 1; max-width: 860px; }
+
+    .hero-eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease 0.2s forwards;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+      margin-bottom: 0.4em;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.45s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--amber);
+      display: block;
+    }
+    .hero-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      font-weight: 300;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.7s forwards;
+    }
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.8rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--amber);
+      padding: 1rem 2.4rem;
+      border: none; cursor: pointer;
+      text-decoration: none;
+      transition: background 0.25s, transform 0.2s;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
+    }
+    .hero-cta:hover { background: var(--amber-lt); transform: translateY(-2px); }
+    .hero-cta::after { content: '↓'; font-size: 1rem; }
+
+    .hero-scroll-line {
+      position: absolute; bottom: 3rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+      font-family: 'Jost', sans-serif; font-size: 0.6rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--muted); opacity: 0;
+      animation: fadeIn 1s ease 1.5s forwards;
+    }
+    .scroll-bar {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, var(--amber), transparent);
+      animation: scrollPulse 2s ease-in-out 1.5s infinite;
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 7rem 2rem; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 300;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block; width: 40px; height: 1px;
+      background: var(--amber);
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--cream);
+      margin-bottom: 1.5rem;
+    }
+    .section-title em { font-style: italic; color: var(--amber); }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 0;
+    }
+
+    /* ─── ABOUT ─── */
+    #about { background: var(--bg2); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-image-wrap {
+      position: relative;
+    }
+    .about-image-placeholder {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--card);
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      color: var(--muted);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      position: relative; overflow: hidden;
+    }
+    .about-image-placeholder::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(122,184,212,0.05) 0%, transparent 60%);
+    }
+    .cake-icon { font-size: 3rem; opacity: 0.3; }
+    .about-frame-accent {
+      position: absolute;
+      top: -12px; right: -12px;
+      width: calc(100% - 24px);
+      height: calc(100% - 24px);
+      border: 1px solid var(--border);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .about-text { position: relative; z-index: 1; }
+    .about-body {
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: rgba(245,233,211,0.8);
+      margin-bottom: 1.5rem;
+    }
+    .about-body strong { color: var(--amber); font-weight: 600; }
+    .about-stats {
+      display: flex; gap: 3rem;
+      margin-top: 2.5rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--amber);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ─── GALLERY ─── */
+    #gallery { background: var(--bg); }
+    .gallery-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3.5rem;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .gallery-filter {
+      display: flex; gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      color: var(--amber);
+      border-color: var(--amber);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: 280px;
+      gap: 12px;
+    }
+    .gallery-item {
+      position: relative; overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover { transform: scale(1.02); z-index: 2; }
+    .gallery-item.tall { grid-row: span 2; }
+    .gallery-item.wide { grid-column: span 2; }
+
+    .gallery-placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.8rem;
+      background: linear-gradient(135deg, var(--card) 0%, rgba(36,26,16,0.7) 100%);
+      position: relative; overflow: hidden;
+    }
+    .gallery-placeholder::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(122,184,212,0.04) 0%, transparent 70%);
+    }
+    .gallery-icon { font-size: 2.5rem; opacity: 0.25; }
+    .gallery-tag {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.7;
+    }
+
+    .gallery-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(15,11,9,0.92) 0%, transparent 60%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: 0.2rem;
+    }
+    .gallery-overlay-sub {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--amber);
+    }
+
+    /* ─── CONTACT ─── */
+    #contact { background: var(--bg3); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .contact-info-block {
+      display: flex; flex-direction: column; gap: 2rem;
+    }
+    .contact-info-body {
+      font-size: 1.05rem;
+      color: rgba(245,233,211,0.7);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .contact-detail {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .contact-detail:first-of-type { border-top: 1px solid var(--border); }
+    .contact-detail-icon {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--amber);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .contact-detail-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .contact-detail-value {
+      font-size: 0.95rem;
+      color: var(--cream);
+    }
+
+    /* ─── FORM ─── */
+    .contact-form { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+
+    .field { display: flex; flex-direction: column; gap: 0.4rem; }
+    .field label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      padding: 0.85rem 1.1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+      appearance: none;
+    }
+    .field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239c856a' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+    .field select option { background: var(--card); }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus { border-color: var(--amber); }
+    .field textarea { resize: vertical; min-height: 130px; }
+
+    .form-submit {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.8rem;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 400;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bg);
+      background: var(--amber);
+      border: none; cursor: pointer;
+      padding: 1.1rem 2.8rem;
+      transition: background 0.25s, transform 0.2s;
+      margin-top: 0.5rem;
+      align-self: flex-start;
+    }
+    .form-submit:hover { background: var(--amber-lt); transform: translateY(-2px); }
+    .form-submit::after { content: '→'; font-size: 1rem; }
+
+    .form-note {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 3rem 4rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--amber);
+    }
+    .footer-copy {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+    }
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      font-style: italic;
+      color: var(--muted);
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.15); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item.wide { grid-column: span 1; }
+      footer { padding: 2rem 1.5rem; flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .gallery-item.tall { grid-row: span 1; }
+      .form-row { grid-template-columns: 1fr; }
+      section { padding: 5rem 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav id="mainNav">
+  <a class="nav-logo" href="#hero">KC's Cakes & Bakes</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-deco"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">✦ Custom Cakes & Artisan Bakes · Reno, NV ✦</p>
+    <h1 class="hero-title">
+      KC's Cakes
+      <em>& Bakes</em>
+    </h1>
+    <p class="hero-tagline">"Baking Your Ideas to Life"</p>
+    <a href="#gallery" class="hero-cta">View My Work</a>
+  </div>
+  <div class="hero-scroll-line">
+    <span>Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-image-wrap reveal">
+        <div class="about-image-placeholder">
+          <div class="cake-icon">🎂</div>
+          <span>Photo of KC Marlin</span>
+        </div>
+        <div class="about-frame-accent"></div>
+      </div>
+      <div class="about-text reveal">
+        <p class="section-label">About Me</p>
+        <h2 class="section-title">Hello, I'm <em>KC Marlin</em></h2>
+        <p class="about-body">
+          Welcome to <strong>KC's Cakes & Bakes</strong> — where every creation starts with your vision and ends with something extraordinary. I'm a passionate cake maker and decorator based right here in Reno, Nevada, turning celebrations into edible works of art.
+        </p>
+        <p class="about-body">
+          From intimate birthday cakes to towering wedding masterpieces, I pour creativity, precision, and genuine love into every single layer. Whether you're dreaming of intricate sugar flowers, bold sculpted designs, or timeless elegant tiers — <strong>your idea becomes my mission</strong>.
+        </p>
+        <p class="about-body">
+          Every cake is made from scratch with quality ingredients, baked to order, and designed specifically for you. No two cakes are ever the same.
+        </p>
+        <div class="about-stats">
+          <div>
+            <div class="stat-num">100+</div>
+            <div class="stat-label">Cakes Created</div>
+          </div>
+          <div>
+            <div class="stat-num">5★</div>
+            <div class="stat-label">Client Rating</div>
+          </div>
+          <div>
+            <div class="stat-num">∞</div>
+            <div class="stat-label">Creative Ideas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── GALLERY ─── -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="gallery-header reveal">
+      <div>
+        <p class="section-label">Portfolio</p>
+        <h2 class="section-title">A Taste of <em>My Work</em></h2>
+      </div>
+      <div class="gallery-filter">
+        <button class="filter-btn active">All</button>
+        <button class="filter-btn">Wedding</button>
+        <button class="filter-btn">Birthday</button>
+        <button class="filter-btn">Custom</button>
+      </div>
+    </div>
+
+    <div class="gallery-grid reveal">
+
+      <div class="gallery-item tall">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">🎂</div>
+          <span class="gallery-tag">Wedding Tier</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Three-Tier Wedding Cake</div>
+          <div class="gallery-overlay-sub">Wedding · Custom Florals</div>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">🌸</div>
+          <span class="gallery-tag">Floral Design</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Spring Floral Cake</div>
+          <div class="gallery-overlay-sub">Birthday · Buttercream</div>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">🍫</div>
+          <span class="gallery-tag">Chocolate Creation</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Dark Chocolate Drip</div>
+          <div class="gallery-overlay-sub">Custom · Ganache</div>
+        </div>
+      </div>
+
+      <div class="gallery-item wide">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">✨</div>
+          <span class="gallery-tag">Sculpted Masterpiece</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Sculpted Character Cake</div>
+          <div class="gallery-overlay-sub">Custom · Fondant Sculpt</div>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">🌿</div>
+          <span class="gallery-tag">Botanical</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Botanical Garden Cake</div>
+          <div class="gallery-overlay-sub">Wedding · Sugar Flowers</div>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">🎉</div>
+          <span class="gallery-tag">Celebration</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Ombré Celebration</div>
+          <div class="gallery-overlay-sub">Birthday · Ombré Layers</div>
+        </div>
+      </div>
+
+      <div class="gallery-item tall">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">💎</div>
+          <span class="gallery-tag">Luxury Tier</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Geode Crystal Cake</div>
+          <div class="gallery-overlay-sub">Custom · Rock Candy</div>
+        </div>
+      </div>
+
+      <div class="gallery-item">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon">🌙</div>
+          <span class="gallery-tag">Celestial Theme</span>
+        </div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Celestial Galaxy Cake</div>
+          <div class="gallery-overlay-sub">Birthday · Airbrush</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="contact-grid">
+
+      <div class="contact-info-block reveal">
+        <div>
+          <p class="section-label">Get In Touch</p>
+          <h2 class="section-title">Let's Build Your <em>Dream Cake</em></h2>
+        </div>
+        <p class="contact-info-body">
+          Have a vision? Let's make it happen. Reach out to start the conversation about your custom creation. I'd love to hear about your event and bring your sweetest ideas to life.
+        </p>
+
+        <div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">✉</div>
+            <div>
+              <div class="contact-detail-label">Email</div>
+              <div class="contact-detail-value">kassiemarlin@charter.net</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">✆</div>
+            <div>
+              <div class="contact-detail-label">Phone</div>
+              <div class="contact-detail-value">775-741-4458</div>
+            </div>
+          </div>
+          <div class="contact-detail">
+            <div class="contact-detail-icon">◉</div>
+            <div>
+              <div class="contact-detail-label">Location</div>
+              <div class="contact-detail-value">Reno, Nevada</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <form class="contact-form" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="field">
+              <label for="name">Your Name</label>
+              <input type="text" id="name" placeholder="Jane Smith" required />
+            </div>
+            <div class="field">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="jane@example.com" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="(555) 000-0000" />
+            </div>
+            <div class="field">
+              <label for="event">Event Type</label>
+              <select id="event">
+                <option value="">Select an event...</option>
+                <option>Wedding</option>
+                <option>Birthday</option>
+                <option>Anniversary</option>
+                <option>Baby Shower</option>
+                <option>Corporate Event</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="date">Event Date</label>
+            <input type="date" id="date" />
+          </div>
+
+          <div class="field">
+            <label for="message">Tell Me About Your Vision</label>
+            <textarea id="message" placeholder="Describe your dream cake — flavors, design ideas, colors, theme, number of guests..."></textarea>
+          </div>
+
+          <button type="submit" class="form-submit">Send My Request</button>
+          <p class="form-note" id="formNote"></p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">KC's Cakes & Bakes</div>
+  <div class="footer-tagline">"Baking Your Ideas to Life"</div>
+  <div class="footer-copy">© 2025 KC Marlin · Reno, NV · All Rights Reserved</div>
+</footer>
+
+<script>
+  // Nav scroll effect
+  const nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Gallery filter (visual only)
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  // Form submit handler
+  function handleSubmit(e) {
+    e.preventDefault();
+    const note = document.getElementById('formNote');
+    note.textContent = '✦ Thank you! KC will be in touch with you soon.';
+    note.style.color = '#e8a042';
+    e.target.reset();
+    setTimeout(() => { note.textContent = ''; }, 5000);
+  }
+</script>
+</body>
+</html>
